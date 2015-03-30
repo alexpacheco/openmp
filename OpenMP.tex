@@ -1,0 +1,1127 @@
+\documentclass[slidestop,mathserif,compress,xcolor=svgnames]{beamer} 
+\mode<presentation>
+{  
+  \setbeamertemplate{background canvas}[vertical shading][bottom=blue!5,top=blue!5]
+  \setbeamertemplate{navigation symbols}{}%{\insertsectionnavigationsymbol}
+    \usetheme{LSU}
+%  default infolines miniframes shadow sidebar smoothbars smoothtree split tree
+%    \useoutertheme{shadow}
+}
+
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{amsmath,amssymb,amsfonts,subfigure}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{calc}
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+\usepackage[latin1]{inputenc}
+\usepackage{colortbl}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage[normalem]{ulem}
+% \usepackage{movie15}
+\hypersetup{
+  pdftitle={Introduction to OpenMP},
+  pdfauthor={Alexander B. Pacheco, User Services Consultant, Louisiana State University}
+}
+%\usepackage{movie15}
+\usepackage{times}
+\setbeamercovered{dynamic}
+\beamersetaveragebackground{DarkBlue!2}
+\beamertemplateballitem
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\definecolor{DarkGreen}{rgb}{0.0,0.3,0.0}
+\definecolor{darkgreen}{rgb}{0.0,0.6,0.0}
+\definecolor{Blue}{rgb}{0.0,0.0,0.8} 
+\definecolor{dodgerblue}{rgb}{0.1,0.1,1.0}
+\definecolor{indigo}{rgb}{0.41,0.1,0.0}
+\definecolor{seagreen}{rgb}{0.1,1.0,0.1}
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+\newcommand*\up{\textcolor{green}{%
+  \ensuremath{\blacktriangle}}}
+\newcommand*\down{\textcolor{red}{%
+  \ensuremath{\blacktriangledown}}}
+\newcommand*\const{\textcolor{darkgray}%
+  {\textbf{--}}}
+
+\setbeamercolor{uppercol}{fg=white,bg=red!30!black}%
+\setbeamercolor{lowercol}{fg=black,bg=red!15!white}%
+\setbeamercolor{uppercol1}{fg=white,bg=blue!30!black}%
+\setbeamercolor{lowercol1}{fg=black,bg=blue!15!white}%%
+\setbeamercolor{uppercol2}{fg=white,bg=green!30!black}%
+\setbeamercolor{lowercol2}{fg=black,bg=green!15!white}%
+\newenvironment{colorblock}[4]
+{
+\setbeamercolor{upperblock}{fg=#1,bg=#2}
+\setbeamercolor{lowerblock}{fg=#3,bg=#4}
+\begin{beamerboxesrounded}[upper=upperblock,lower=lowerblock,shadow=true]}
+{\end{beamerboxesrounded}}
+\newenvironment{ablock}[0]
+{
+\begin{beamerboxesrounded}[upper=uppercol,lower=lowercol,shadow=true]}
+{\end{beamerboxesrounded}}
+\newenvironment{bblock}[0]
+{
+\begin{beamerboxesrounded}[upper=uppercol1,lower=lowercol1,shadow=true]}
+{\end{beamerboxesrounded}}
+\newenvironment{eblock}[0]
+{
+\begin{beamerboxesrounded}[upper=uppercol2,lower=lowercol2,shadow=true]}
+{\end{beamerboxesrounded}}
+
+% Fix font size of nested itemize/enumerate
+\setbeamerfont{itemize/enumerate body}{}
+\setbeamerfont{itemize/enumerate subbody}{size=\scriptsize}
+\setbeamerfont{itemize/enumerate subsubbody}{size=\scriptsize}
+
+\title[OpenMP]{Introduction to OpenMP}
+
+
+\author[Alex Pacheco]{\large{Alexander~B.~Pacheco}}
+       
+\institute[HPC@LSU - http://www.hpc.lsu.edu] {\inst{}\footnotesize{User Services Consultant\\LSU HPC \& LONI\\sys-help@loni.org}}
+
+\date[{Feb 13-16, 2012\hspace{2cm}}]{\scriptsize{LONI Workshop: Fortran Programming\\Louisiana State University\\Baton Rouge\\Feb 13-16, 2012}}
+     
+\subject{Talks}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+
+
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% Main Logo on bottom left
+\pgfdeclareimage[height=0.55cm]{its-logo}{LONI}
+\logo{\pgfuseimage{its-logo}}
+% University Logo on top left
+\pgfdeclareimage[height=0.55cm]{university-logo}{LSUGeauxPurp}
+\tllogo{\pgfuseimage{university-logo}}
+% Logo at top right
+\pgfdeclareimage[height=0.6cm]{institute-logo}{PUR_BLK_HOR}
+\trlogo{\pgfuseimage{institute-logo}}
+% Logo at bottom right
+\pgfdeclareimage[height=0.55cm]{hpc-logo}{CCT}
+\brlogo{\pgfuseimage{hpc-logo}}
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+%  \AtBeginSection[]
+%  {
+%    \begin{frame}<beamer>
+%     \frametitle{\small{Outline}}
+%      \small
+%      \tableofcontents[currentsection,currentsubsection]
+%    \end{frame}
+%  }
+
+\begin{document}
+\scriptsize
+
+\tikzstyle{every picture}+=[remember picture]
+\frame{\titlepage}
+
+%\begin{frame}[label=toc,squeeze]
+%  \footnotesize
+%  \frametitle{\small{Outline}}
+%  \tableofcontents
+%\end{frame}
+
+
+%\part{Introduction}
+%\section{Introduction}
+\begin{frame}
+  \frametitle{\small Goals}
+  \begin{block}{}
+    \begin{itemize}
+      \item Acquaint users with the concepts of shared memory parallelism.
+      \item Acquaint users with the basics of programming with OpenMP.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Distributed Memory Model}
+%  \begin{columns}
+%    \column{6cm}
+    \begin{itemize}
+      \item Each process has its own address space
+      \begin{itemize}
+        \item Data is local to each process
+      \end{itemize}
+      \item Data sharing is achieved via explicit message passing
+      \item Example
+      \begin{itemize}
+        \item MPI
+      \end{itemize}
+    \end{itemize}
+%    \column{6cm}
+    \begin{center}
+      \includegraphics[width=8cm]{./distributed}
+    \end{center}
+%  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Shared Memory Model}
+%  \begin{columns}
+%    \column{6cm}
+    \begin{itemize}
+      \item All threads can access the global memory space.
+      \item Data sharing achieved via writing to/reading from the same memory location
+      \item Example
+      \begin{itemize}
+        \item OpenMP
+        \item Pthreads
+      \end{itemize}
+    \end{itemize}
+%    \column{6cm}
+    \begin{center}
+      \includegraphics[width=8cm]{./shared}
+    \end{center}
+%  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{\small Clusters of SMP nodes}
+  \begin{itemize}
+    \item The shared memory model is most commonly represented by Symmetric Multi-Processing (SMP) systems
+    \begin{itemize}
+      \item Identical processors
+      \item Equal access time to memory
+    \end{itemize}
+    \item Large shared memory systems are rare, clusters of SMP nodes are popular.
+  \end{itemize}
+  \begin{columns}
+    \column{13cm}
+    \begin{center}
+      \includegraphics[width=12cm]{./smp-cluster}
+    \end{center}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Shared vs Distributed}
+%  \begin{columns}
+%    \column{5cm}
+    \begin{eblock}{Shared Memory}
+      \begin{itemize}
+        \item Pros
+        \begin{itemize}
+          \item Global address space is user friendly
+          \item Data sharing is fast
+        \end{itemize}
+        \item Cons
+        \begin{itemize}
+          \item Lack of scalability
+          \item Data conflict issues
+        \end{itemize}
+      \end{itemize}
+    \end{eblock}
+%    \column{5cm}
+    \begin{eblock}{Distributed Memory}
+      \begin{itemize}
+        \item Pros
+        \begin{itemize}
+          \item Memory scalable with number of processors
+          \item Easier and cheaper to build
+        \end{itemize}
+        \item Cons
+        \begin{itemize}
+          \item Difficult load balancing
+          \item Data sharing is slow
+        \end{itemize}
+      \end{itemize}
+    \end{eblock}
+%  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small OpenMP}
+  \begin{bblock}{}
+    \begin{itemize}
+      \item OpenMP is an Application Program Interface (API) for thread based parallelism; Supports Fortran, C and C++
+      \item Uses a fork-join execution model
+      \item OpenMP structures are built with program directives, runtime libraries and environment variables
+      \item OpenMP has been the industry standard for shared memory programming over the last decade
+      \begin{itemize}
+        \item Permanent members of the OpenMP Architecture Review Board: AMD, Cray, Fujutsu, HP, IBM, Intel, Microsoft, NEC, PGI, SGI, Sun
+      \end{itemize}
+      \item OpenMP 3.1 was released in September 2011
+    \end{itemize}
+  \end{bblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Advantages of OpenMP}
+  \begin{bblock}{}
+    \begin{itemize}
+      \item Portability
+      \begin{itemize}
+        \item Standard among many shared memory platforms
+        \item Implemented in major compiler suites
+      \end{itemize}
+      \item Ease to use 
+      \begin{itemize}
+        \item Serial programs can be parallelized by adding compiler directives
+        \item Allows for incremental parallelization - a serial program evolves into a parallel program by parallelizing different sections incrementally
+      \end{itemize}
+    \end{itemize}
+  \end{bblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Fork-Join Execution Model}
+  \begin{columns}
+    \column{7cm}
+    \begin{bblock}{}
+      \begin{itemize}
+        \item Parallelism is achieved by generating multiple threads that run in parallel
+        \begin{itemize}
+          \item A fork is when a single thread is made into multiple, concurrently executing threads
+          \item A join is when the concurrently executing threads synchronize back into a single thread
+        \end{itemize}
+        \item OpenMP programs essentially consist of a series of forks and joins.
+      \end{itemize}
+    \end{bblock}
+    \column{4cm}
+    \begin{bblock}{}
+      \begin{center}
+        \includegraphics[width=4cm]{./fork-join}
+      \end{center}
+    \end{bblock}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{\small Building Block of OpenMP}
+  \begin{eblock}{}
+    \begin{itemize}
+      \item Program directives
+        \begin{itemize}
+          \item Syntax
+            \begin{itemize}
+              \item C/C++: \texttt{\#pragma omp <directive> [clause]}
+              \item Fortran: \texttt{!\$omp <directive> [clause]}
+            \end{itemize}
+          \item Parallel regions
+          \item Parallel loops
+          \item Synchronization
+          \item Data Structure
+          \item $\cdots$
+        \end{itemize}
+      \item Runtime library routines
+      \item Environment variables
+    \end{itemize}
+  \end{eblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Hello World: C}
+  \begin{columns}
+    \column{6cm}
+    \tikzstyle{na} = [baseline=-.5ex]
+    \begin{bblock}{}
+       \begin{tabular}{lc}
+        {\color{DarkGreen}\#include <omp.h>} \tikz[na] \node[coordinate] (n1) {}; & \\
+        {\color{DarkGreen}\#include <stdio.h>} & \\
+        int main () \{ & \\
+        \quad {\color{blue}\#pragma omp parallel} & \\
+        \quad \{ \tikz[na] \node[coordinate] (n2) {}; & \\
+        \quad \quad printf("Hello from thread \%d out of \%d & \\
+        \quad \quad\quad threads\textbackslash n'',{\color{red}omp\_get\_thread\_num()} \tikz[na] \node[coordinate] (n3) {}; , & \\
+        \quad \quad\quad {\color{red}omp\_get\_num\_threads()}\tikz[na] \node[coordinate] (n4) {}; ); & \\
+        \quad \} \tikz[na] \node[coordinate] (n5) {}; & \\
+        \quad return 0; & \\
+        \} & \\
+      \end{tabular}
+    \end{bblock}
+    \column{4cm}
+    \vspace{-0.5cm}
+    \begin{itemize}
+      \item[] \tikz[baseline]{\node[fill=blue!20,anchor=base] (t1) {OpenMP include file}; } 
+      \item[]
+      \item[] \tikz[baseline]{\node[fill=blue!20,anchor=base] (t2) {Parallel region starts here};  } 
+      \item[]
+      \item[] \tikz[baseline]{\node[fill=blue!20,anchor=base] (t3) {Runtime library functions};  }
+      \item[]
+      \item[] \tikz[baseline]{\node[fill=blue!20,anchor=base] (t4) {Parallel region ends here};  }
+    \end{itemize}
+    \begin{tikzpicture}[overlay]
+        \path[->] (t1) edge (n1);
+        \path[->] (t2) edge (n2);
+        \path[->] (t3) edge (n3);
+        \path[->] (t3) edge (n4);
+        \path[->] (t4) edge (n5);
+    \end{tikzpicture}
+  \end{columns}
+  \begin{columns}
+    \column{5cm}
+    \begin{eblock}{Output}
+      Hello from thread 0 out of 4 threads\\
+      Hello from thread 1 out of 4 threads\\
+      Hello from thread 2 out of 4 threads\\
+      Hello from thread 3 out of 4 threads
+    \end{eblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Hello World: Fortran}
+  \begin{columns}
+    \column{8cm}
+    \tikzstyle{na} = [baseline=-.5ex]
+    \begin{bblock}{}
+       \begin{tabular}{lc}
+         program hello & \\
+         \\
+        \quad implicit none & \\
+        \quad integer :: omp\_get\_thread\_num, omp\_get\_num\_threads & \\
+        \\
+        \quad {\color{blue} !\$omp parallel} \tikz[na] \node[coordinate] (n2) {}; & \\
+        \\
+        \quad print *, 'Hello from thread',{\color{red}omp\_get\_thread\_num()} \tikz[na] \node[coordinate] (n3) {}; , \& & \\
+        \quad\quad 'out of ' {\color{red}omp\_get\_num\_threads()}\tikz[na] \node[coordinate] (n4) {};,' threads' & \\
+        \\
+        \quad {\color{blue} !\$omp end parallel} \tikz[na] \node[coordinate] (n5) {}; & \\
+        end program hello & \\ 
+      \end{tabular}
+    \end{bblock}
+    \column{4cm}
+%    \vspace{-0.5cm}
+    \begin{itemize}
+ %     \item[] \tikz[baseline]{\node[fill=blue!20,anchor=base] (t1) {OpenMP include file}; } 
+ %     \item[]
+      \item[]
+      \item[]
+      \item[] \tikz[baseline]{\node[fill=blue!20,anchor=base] (t2) {Parallel region starts here};  } 
+      \item[]
+      \item[] \tikz[baseline]{\node[fill=blue!20,anchor=base] (t3) {Runtime library functions};  }
+      \item[]
+      \item[] \tikz[baseline]{\node[fill=blue!20,anchor=base] (t4) {Parallel region ends here};  }
+    \end{itemize}
+    \begin{tikzpicture}[overlay]
+%        \path[->] (t1) edge (n1);
+        \path[->] (t2) edge  (n2);
+        \path[->] (t3) edge [bend right] (n3);
+        \path[->] (t3) edge [bend left] (n4);
+        \path[->] (t4) edge [bend left] (n5);
+    \end{tikzpicture}
+  \end{columns}
+  \vspace{0.8cm}
+  \begin{columns}
+    \column{5cm}
+    \begin{eblock}{Output}
+      Hello from thread 0 out of 4 threads\\
+      Hello from thread 1 out of 4 threads\\
+      Hello from thread 2 out of 4 threads\\
+      Hello from thread 3 out of 4 threads
+    \end{eblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Compilation and Execution}
+  \begin{itemize}
+    \item IBM Power5 and Power7 clusters
+    \begin{itemize}
+      \item Use thread-safe compilers (with "\_r'')
+      \item Use '-qsmp=omp' option
+    \end{itemize}
+    \item[] \% xlc\_r -qsmp=omp hello.c \&\& OMP\_NUM\_THREADS=4 ./a.out
+    \item[] \% xlf90\_r -qsmp=omp hello.f90 \&\& OMP\_NUM\_THREADS=4 ./a.out
+    \item Dell Linux clusters
+    \begin{itemize}
+      \item Use '-openmp' option (Intel compiler)
+    \end{itemize}
+    \item \% icc -openmp hello.c \&\& OMP\_NUM\_THREADS=4 ./a.out
+    \item \% ifort -openmp hello.f90 \&\& OMP\_NUM\_THREADS=4 ./a.out
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Exercise 1: Hello World}
+  \begin{itemize}
+    \item Write a ``hello world'' program with OpenMP where
+      \begin{enumerate}
+        \item If the thread id is odd, then print a message "Hello world from thread x, I'm odd!''
+        \item If the thread id is even, then print a message "Hello world from thread x, I'm even!''
+      \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\small Solution}
+  \begin{columns}
+    \column{5cm}
+    \begin{eblock}{C/C++}
+      {\tiny
+      \begin{verbatim}
+#include <omp.h>
+#include <stdio.h>
+int main() {
+  int id;
+#pragma omp parallel private(id)
+  {
+    id = omp_get_thread_num();
+    if (id%2==1)
+      printf("Hello world from 
+thread %d, I am odd\n", id);
+    else
+      printf("Hello world from 
+thread %d, I am even\n", id);
+  }
+}
+      \end{verbatim}
+      }
+    \end{eblock}
+    \column{5cm}
+    \begin{eblock}{Fortran}
+      {\tiny
+      \begin{verbatim}
+program hello
+  implicit none
+  integer i,omp_get_thread_num
+  !$omp parallel private(i)
+  i = omp_get_thread_num()
+  if (mod(i,2).eq.1) then
+     print *,'Hello world from 
+     thread',i,', I am odd!'
+  else
+     print *,'Hello world from 
+     thread',i,', I am even!'
+  endif
+  !$omp end parallel
+end program hello
+      \end{verbatim}
+      }
+    \end{eblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Work Sharing: Parallel Loops}
+  \begin{itemize}
+    \item We need to share work among threads to achieve parallelism
+    \item Loops are the most likely targets when parallelizing a serial program
+    \item Syntax:
+    \begin{itemize}
+      \item Fortran: \texttt{!\$omp parallel do}
+      \item C/C++: \texttt{\#pragma omp parallel for}
+    \end{itemize}
+    \item Other work sharing directives available
+    \begin{itemize}
+      \item Sections
+      \item Tasks
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Example: Parallel Loops}
+  \begin{columns}
+    \column{0.45\textwidth}
+    \begin{eblock}{C/C++}
+      \begin{tabbing}
+        \#include <omp.h> \\
+        int \=main() \{ \\
+        \> int i=0,N=100,a[100] ; \\
+        \> {\color{red}\#pragma omp parallel for} \\
+        \>for \=(i=0;i<N;i++) \{ \\
+        \>\> a[i]=some\_function(i) ; \\
+        \>\} \\
+        \}
+      \end{tabbing}
+    \end{eblock}
+    \column{0.45\textwidth}
+    \begin{eblock}{Fortran}
+      \begin{tabbing}
+        pro\=gram paralleldo \\
+        \> implicit none \\
+        \> integer i,n,a(100) \\
+        \> i= 0 \\
+        \> n = 100 \\
+        \> {\color{red}!\$omp parallel do} \\
+        \> do \=i=1,n \\
+        \>\> a(i) = some\_function(i) \\
+        \> end do \\
+        \> {\color{red}!\$omp end parallel do} \\
+        end program paralleldo
+      \end{tabbing}
+    \end{eblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{\small Load Balancing}
+  \begin{itemize}
+    \item OpenMP provides different methods to divide iterations among threads, indicated by the \texttt{schedule} clause
+    \begin{itemize}
+      \item Syntax: \texttt{schedule (<method>, [chunk size])}
+    \end{itemize}
+    \item Methods include
+    \begin{itemize}
+      \item \texttt{Static}: the default schedule; divide interations into chunks according to \texttt{size}, then distribute chunks to each thread in a round-robin manner.
+      \item \texttt{Dynamic}: each thread grabs a chunk of iterations, then requests another chunk upon completion of the current one, until all iterations are executed.
+      \item \texttt{Guided}: similar to \texttt{Dynamic}; the only difference is that the chunk size starts large and shrinks to \texttt{size} eventually.
+    \end{itemize}
+  \end{itemize}
+
+  \begin{bblock}{4 threads, 100 iterations}
+    \begin{tabular}{ccccc}
+      \multirow{2}{*}{Schedule}& \multicolumn{4}{c}{Iterations mapped onto thread}\\
+      & 0 & 1 & 2 & 3 \\
+      \hline
+      \texttt{Static} & 1-25 & 26-50 & 51-75 & 76-100 \\
+      \texttt{Static,20} & 1-20, 81-100 & 21-40 & 41-60 & 61-80 \\
+      \texttt{Dynamic} & $1,\cdots$ & $2,\cdots$ & $3,\cdots$ & $4,\cdots$ \\
+      \texttt{Dynamic,10} & $1-10,\cdots$ & $11-20,\cdots$ & $21-30,\cdots$ & $31-40,\cdots$ \\
+      \hline\\
+    \end{tabular}
+  \end{bblock}
+
+  \begin{bblock}{}
+    \begin{center}
+      \begin{tabular}{cl}
+        Schedule & When to Use \\
+        \hline\\
+        \multirow{3}{*}{\texttt{Static}} & Even and predictable workload per iteration; \\
+        & scheduling may be done at compilation time,\\ 
+        & least work at runtime.\\
+        \\
+        \multirow{2}{*}{\texttt{Dynamic}} & Highly variable and unpredictable workload \\
+        & per iteration; most work at runtime \\
+        \\
+        \multirow{3}{*}{\texttt{Guided}} & Special case of \texttt{dynamic} scheduling; \\
+        & compromise between load balancing and \\
+        & scheduling overhead at runtime \\
+      \end{tabular}
+    \end{center}
+  \end{bblock}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Work Sharing: Sections}
+  \begin{itemize}
+    \item Gives a different block to each thread
+  \end{itemize}
+  \begin{columns}
+    \column{0.45\textwidth}
+    \begin{eblock}{C/C++}
+      \begin{tabbing}
+        \#pragma omp parallel \\
+        \{ \=\\
+        \> \#pragma omp sections \\
+        \>\{ \=\\
+        \>\>\#pr\=agma omp section \\
+        \>\>\> some\_calculation() ; \\
+        \>\>\#pragma omp section \\
+        \>\>\> some\_more\_calculation() ; \\
+        \>\>\#pragma omp section \\
+        \>\>\> yet\_some\_more\_calculation() ; \\
+        \>\}\\
+        \}
+      \end{tabbing}
+    \end{eblock}
+    \column{0.45\textwidth}
+    \begin{eblock}{Fortran}
+      \begin{tabbing}
+        !\$\=omp parallel \\
+        \>!\$omp sections \\
+        \>!\$\=omp section \\
+        \>\> call some\_calculation \\
+        \>!\$omp section \\
+        \>\> call some\_more\_calculation \\
+        \>!\$omp section \\
+        \>\> call yet\_some\_more\_calculation \\
+        \>!\$omp end sections \\
+        !\$omp end parallel
+      \end{tabbing}
+    \end{eblock}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{\small Scope of variables}
+  \begin{itemize}
+    \item \texttt{Shared(list)}
+    \begin{itemize}
+      \item Specifies the variables that are shared among all threads
+    \end{itemize}
+    \item \texttt{Private(list)}
+    \begin{itemize}
+      \item Creates a local copy of the specified variables for each thread
+      \item the value is uninitialized!
+    \end{itemize}
+    \item \texttt{Default(shared|private|none)}
+    \begin{itemize}
+      \item Defines the default scope of variables
+      \item \textbf{C/C++ API does not have \texttt{default(private)}}
+    \end{itemize}
+    \item Most variables are shared by default
+    \begin{itemize}
+      \item A few exceptions: iteration varibales; stack variables in subroutines; automatic variables within a statement block.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{\small Private Variables}
+  \begin{columns}
+    \column{5cm}
+    \begin{itemize}
+      \item Not initialized at the beginning of parallel region.
+      \item After parallel region
+      \begin{itemize}
+        \item Not defined in OpenMP 2.x
+        \item 0 in OpenMP 3.x
+      \end{itemize}
+    \end{itemize}
+    \column{7cm}
+    \tikzstyle{na} = [baseline=-.5ex]
+%    \hspace{4cm}\tikz[baseline]{\node[fill=blue!20,anchor=base] (t1) {tmp not initialized here};}
+    \tikz[na]{\node[coordinate,fill=blue!20,rectangle] (t1) {tmp not initialized here};}
+    \begin{eblock}{}
+      \begin{tabbing}
+        void wrong()\\
+        \{\,\,\=\\
+        \> int tmp=0;\\
+        \>\#pra\=gma omp for private (\tikz[baseline]{\node[anchor=base] (n1) {tmp};})\\
+        \>\>for\= (int j=0; j<100; ++j)\\
+        \>\>\> tmp += j \\
+        \>printf("\%d\textbackslash n'',\tikz[baseline]{\node[anchor=base] (n2) {tmp};})\\
+        \}
+      \end{tabbing}
+    \end{eblock}
+    \tikz[na]{\node[coordinate,fill=blue!20,rectangle] (t2) {OpenMP 2.5: tmp undefined};}
+    \tikz[na]{\node[coordinate,fill=blue!20,rectangle] (t3) {OpenMP 3.0: tmp is 0};}
+%    \begin{columns}
+%      \column{4cm}
+%      \begin{eblock}{\tikz[baseline]{\node[fill=blue!20,coordinate] (t2) {};} }
+%        OpenMP 2.5: tmp undefined \\
+%        OpenMP 3.0: tmp is 0 %\tikz[baseline]{\node[fill=blue!20,coordinate] (t3) {} ;}
+%      \end{eblock}
+%      \end{columns}
+      \begin{tikzpicture}[overlay]
+        \path[->] (t1) edge (n1) ;
+        \path[->] (t2) edge (n2) ;
+        \path[->] (t3) edge (n2) ;
+      \end{tikzpicture}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{\small Exercise 2: Calculate pi by Numerical Integration}
+  \begin{columns}
+    \column{5cm}
+    \begin{itemize}
+      \item We know that
+      \begin{align*}
+        \int^1_0 \dfrac{4.0}{(1+x)^2}\, dx = \pi
+      \end{align*}
+      \item So numerically, we can approxiate pi as the sum of a number of rectangles
+      \begin{align*}
+        \sum^N_{i=0}\,F(x_i)\Delta x \approx \pi
+      \end{align*}
+      \item[] \fontsize{4}{5}{ Meadows et al, A ``hands-on'' introduction to OpenMP, SC09 }
+    \end{itemize}
+    \column{5cm}
+    \begin{center}
+      \includegraphics[width=4cm]{./pi}
+    \end{center}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\small Exercise 2: serial version}
+  \begin{columns}
+    \column{5cm}
+    \begin{eblock}{C/C++}
+      {\tiny
+        \begin{verbatim}
+#include <math.h>
+#include <omp.h>
+#include <stdio.h>
+int main() {
+  int N=1000000;
+  double x,y,d;
+  double pi,r=1.0;
+  int i,sum=0;
+  for (i=0;i<N;i++) {
+    x = (double)(rand())/((double)
+       (RAND_MAX)+(double)(1));
+    y = (double)(rand())/((double)
+       (RAND_MAX)+(double)(1));
+    d = pow(2.*r*x-r,2)+pow(2.*r*y-r,2);
+    if (d<pow(r,2)) sum++;
+  }
+  pi = 4.*(double)(sum)/(double)(N);
+  printf("The value of pi is %f\n",pi);
+}
+        \end{verbatim}
+      }
+    \end{eblock}
+    \column{5cm}
+    \begin{eblock}{Fortran}
+      {\tiny
+        \begin{verbatim}
+program pi_omp
+  implicit none
+  integer,parameter :: n=1000000
+  real*8,parameter :: r=1.0
+  integer i,sum
+  real*8 x,y,d,pi
+  sum=0
+  do i=1,n
+     call random_number(x)
+     call random_number(y)
+     d=(2*x*r-r)**2+(2*y*r-r)**2
+     if (d.lt.r**2) sum=sum+1
+  enddo
+  pi=4*float(sum)/float(n)
+  print *,'The value of pi is',pi
+end program pi_omp
+        \end{verbatim}
+      }
+    \end{eblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Exercise 2: OpenMP version}
+  \begin{itemize}
+    \item Create a parallel version of the program with OpenMP
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{\small Special Cases of Private}
+  \begin{columns}
+    \column{5cm}
+    \begin{itemize}
+      \item Firstprivate
+      \begin{itemize}
+        \item Initialize each private copy with the corresponding value from the master thread
+      \end{itemize}
+      \item Lastprivate
+      \begin{itemize}
+        \item Allows the value of a private variable to be passed to the shared variable outside the parallel region
+      \end{itemize}
+    \end{itemize}
+    \column{7cm}
+    \tikzstyle{na} = [baseline=-.5ex]
+    \tikz[na]{\node[coordinate,fill=blue!20,rectangle] (t1) {tmp initialized as 0};}
+    \begin{eblock}{}
+      \begin{tabbing}
+        void wrong()\\
+        \{\,\,\=\\
+        \> int tmp=0;\\
+        \>\#pra\=gma omp for firstprivate (\tikz[baseline]{\node[anchor=base] (n1) {tmp};}) lastprivate(tmp)\\
+        \>\>for\= (int j=0; j<100; ++j)\\
+        \>\>\> tmp += j \\
+        \>printf("\%d\textbackslash n'',\tikz[baseline]{\node[anchor=base] (n2) {tmp};})\\
+        \}
+      \end{tabbing}
+    \end{eblock}
+    \tikz[na]{\node[coordinate,fill=blue!20,rectangle] (t2) {The value of tmp is the value when j=99};}
+    \begin{tikzpicture}[overlay]
+      \path[->] (t1) edge (n1) ;
+      \path[->] (t2) edge (n2) ;
+    \end{tikzpicture}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Reduction}
+  \begin{itemize}
+    \item The \texttt{reduction} clause allows accumulative operations on the value of variables.
+    \item Syntax: \texttt{reduction (operator:variable list)}
+    \item A private copy of each variable which appears in \texttt{reduction} is created as if the \texttt{private} clause is specified.
+    \item Operators
+    \begin{enumerate}
+      \item Arithmetic
+      \item Bitwise
+      \item Logical
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Example: Reduction}
+  \begin{columns}
+    \column{0.45\textwidth}
+    \begin{eblock}{C/C++}
+      \begin{tabbing}
+        \#include <omp.h>\\
+        int\=\,main() \{ \\
+        \> int i,N=100,sum,a[100],b[100];\\
+        \> for\= (i=0;i<N;++i)\{\\
+        \>\>a[i]=i;\\
+        \>\>b[i]=1;\\
+        \> \}\\
+        \> sum = 0;\\
+        \>\#pragma omp parallel for \\
+        \>\> {\color{red}reduction(+:sum)}\\
+        \>\> for\= (i=0;i<N;i++)\{\\
+        \>\>\> sum=sum+a[i]*b[i];\\
+        \>\>\}\\
+        \}
+      \end{tabbing}
+    \end{eblock}
+    \column{0.45\textwidth}
+    \begin{eblock}{Fortran}
+      \begin{tabbing}
+        pro\=gram reduction\\
+        \> implicit none \\
+        \> integer i,n,sum,a(100),b(100)\\
+        \> n= 100 \\
+        \> do\=\,i=1,n \\
+        \>\> a(i) = i \\
+        \> end do \\
+        \> b = 1 \\
+        \> sum = 0 \\
+        \> \!\$omp parallel do {\color{red}reduction(+:sum)} \\
+        \>do\=\,i=1,n \\
+        \>\> sum = sum + a(i)*b(i) \\
+        \> end do \\
+        end program reduction 
+      \end{tabbing}
+    \end{eblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Exercise 3: pi calculation with reduction}
+  \begin{itemize}
+    \item Redo exercise 2 with reduction
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\small Solution: pi calculation with reduction}
+  {\fontsize{4}{5}
+  \begin{columns}
+    \column{5cm}
+    \begin{eblock}{C }
+      \begin{verbatim}
+#include <omp.h>
+#include <math.h>
+#include <stdio.h>
+int main() {
+  int N=1000000;
+  double x,y,d;
+  double pi,r=1.0;
+  int i,sum=0;
+#pragma omp parallel for private(i,d,x,y) reduction(+:sum)
+  for (i=0;i<N;i++) {
+    x = (double)(rand())/((double)(RAND_MAX)+(double)(1));
+    y = (double)(rand())/((double)(RAND_MAX)+(double)(1));
+    d = pow(2.*r*x-r,2)+pow(2.*r*y-r,2);
+    if (d<pow(r,2)) sum++;
+  }
+  pi = 4.*(double)(sum)/(double)(N);
+  printf("The value of pi is %f\n",pi);
+}  
+      \end{verbatim}
+    \end{eblock}
+    \column{5cm}
+    \begin{eblock}{Fortran}
+      \begin{verbatim}
+ program pi_omp
+  implicit none
+  integer,parameter :: n=1000000
+  real*8,parameter :: r=1.0
+  integer i,sum
+  real*8 x,y,d,pi
+  sum=0
+  !$omp parallel do private(i,d,x,y) reduction(+:sum)
+  do i=1,n
+     call random_number(x)
+     call random_number(y)
+     d=(2*x*r-r)**2+(2*y*r-r)**2
+     if (d.lt.r**2) sum=sum+1
+  enddo
+  !$omp end parallel do
+  pi=4*float(sum)/float(n)
+  print *,'The value of pi is',pi
+end program pi_omp
+     \end{verbatim}
+    \end{eblock}
+  \end{columns}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Pitfalls: False Sharing}
+  \begin{itemize}
+    \item Array elements that are in the same cache line can lead to false sharing.
+    \begin{itemize}
+      \item The system handles cache coherence on a cache line basis, not on a byte or word basis.
+      \item Each update of a single element could invalidate the entire cache line.
+    \end{itemize}
+  \end{itemize}
+  \begin{columns}
+    \column{5cm}
+    \begin{eblock}{}
+      \begin{tabbing}
+        !\$omp parallel \\
+        myid=omp\_get\_thread\_num() \\
+        nthreads=omp\_get\_num\_threads() \\
+        do \=i=myid+1,n,nthreads \\
+        \> a(i)=some\_function(i) \\
+        end do 
+      \end{tabbing}
+    \end{eblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Pitfalls: Race Condition}
+  \begin{itemize}
+    \item Multiple threads try to write to the same memory location at the same time.
+    \begin{itemize}
+      \item Indeterministic results
+    \end{itemize}
+    \item Inappropriate scope of varibale can cause indeterministic results too.
+    \item When having indeterministic results, set the number of threads to 1 to check
+    \begin{itemize}
+      \item If problem persists: scope problem
+      \item If problem is solved: race condition
+    \end{itemize}
+  \end{itemize}
+  \begin{columns}
+    \column{4cm}
+    \begin{eblock}{}
+      \begin{tabbing}
+        !\$omp parallel do \\
+        do \=i=1,n \\
+        \> if \=(a(i) > max) then \\
+        \>\> max = a(i) \\
+        \> end if \\
+        end do
+      \end{tabbing}
+    \end{eblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Synchronization: Barrier}
+  \begin{itemize}
+    \item ``Stop sign'' where every thread waits until all threads arrive.
+    \item Purpose: protect access to shared data.
+    \item Syntax:
+    \begin{itemize}
+      \item Fortran: \texttt{!\$omp barrier}
+      \item C/C++: \texttt{\#pragma omp barrier}
+    \end{itemize}
+    \item A barrier is implied at the end of every parallel region
+    \begin{itemize}
+      \item Use the \texttt{nowait} clause to turn it off
+    \end{itemize}
+    \item Synchronizations are costly so their usage should be minimized.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Synchronization: Crtitical and Atomic}
+  \begin{itemize}
+    \item Critical: Only one thread at a time can enter a \texttt{critical} region 
+  \end{itemize}
+  \begin{columns}
+    \column{5cm}
+    \begin{eblock}{}
+      \begin{tabbing}
+        !\$omp parallel do \\
+        do \=i=1,N \\
+        \> a = some\_calculation(i) \\
+        \>!\$omp critical \\
+        \>call some\_function(a,x) \\
+        end do \\
+        !\$omp end parallel do 
+      \end{tabbing}
+    \end{eblock}
+  \end{columns}
+  \begin{itemize}
+    \item Atomic: Only one thread at a time can update a memory location 
+  \end{itemize}
+  \begin{columns}
+    \column{5cm}
+    \begin{eblock}{}
+      \begin{tabbing}
+        !\$omp parallel do \\
+        do \=i=1,N \\
+        \> b = some\_calculation(i) \\
+        \>!\$omp atomic \\
+        \> a = a + b \\ 
+        end do \\
+        !\$omp end parallel do
+      \end{tabbing}
+    \end{eblock}  
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{\small Runtime Library Functions}
+  \begin{itemize}
+    \item Modify/query the number of threads
+    \begin{itemize}
+      \item \texttt{omp\_set\_num\_threads()}, \texttt{omp\_get\_num\_threads()}, \texttt{omp\_get\_thread\_num()}, \texttt{omp\_get\_max\_threads()}
+    \end{itemize}
+    \item Query the number of processors
+    \begin{itemize}
+      \item \texttt{omp\_num\_procs()}
+    \end{itemize}
+    \item Query whether or not you are in an active parallel region
+    \begin{itemize}
+      \item \texttt{omp\_in\_parallel()}
+    \end{itemize}
+    \item Control the behavior of dynamic threads
+    \begin{itemize}
+      \item \texttt{omp\_set\_dynamic(),omp\_get\_dynamic()}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small Environment Variables}
+  \begin{itemize}
+    \item OMP\_NUM\_THREADS: set default number of threads to use.
+    \item OMP\_SCHEDULE: control how iterations are scheduled for parallel loops.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\small References}
+  \begin{itemize}
+    \item \url{https://docs.loni.org/wiki/Using_OpenMP}
+    \item \url{http://en.wikipedia.org/wiki/OpenMP}
+    \item \url{http://www.nersc.gov/nusers/help/tutorials/openmp}
+    \item \url{http://www.llnl.gov/computing/tutorials/openMP}
+    \item \url{http://www.citutor.org}
+  \end{itemize}
+\end{frame}
+
+\end{document}
+
