@@ -1,6 +1,6 @@
 ## OpenMP
 This tutorial provides a brief introduction to parallel programming using OpenMP directives 
-( [TeX](OpenMP.tex) | [PDF](OpenMP.pdf) ).
+( [TeX](openmp.tex) | [PDF](openmp.pdf) ).
 
   * LONI Workshop at LSU on
     + Feb. 16, 2012 
