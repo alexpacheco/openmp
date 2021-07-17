@@ -1,0 +1,60 @@
+    \begin{center}
+      \begin{tikzpicture}[scale=0.35]
+        \filldraw[fill=red!80!black] (0,-0.5) rectangle (2.5,0.5);
+        \draw[thick] (2.5,0.0) -- (3.5,0.0);
+        %Parallel Region 4 threads
+        \filldraw[fill=gray!20!white,dotted] (4.5,-3.5) rectangle (8.5,3.5);
+        \draw[thick] (3.5,0.0) -- (4.5,2.5) -- (5.0,2.5);
+        \draw[thick] (3.5,0.0) -- (4.5,1.0) -- (5.0,1.0);
+        \draw[thick] (3.5,0.0) -- (4.5,-1.0) -- (5.0,-1.0);
+        \draw[thick] (3.5,0.0) -- (4.5,-2.5) -- (5.0,-2.5);
+        \filldraw[fill=blue!50!white] (5.0,2.0) rectangle (8.0,3.0);
+        \filldraw[fill=blue!50!white] (5.0,0.5) rectangle (8.0,1.5);
+        \filldraw[fill=blue!50!white] (5.0,-0.5) rectangle (8.0,-1.5);
+        \filldraw[fill=blue!50!white] (5.0,-2.0) rectangle (8.0,-3.0);
+        \draw[thick] (8.0,2.5) -- (8.5,2.5) -- (9.5,0.0);
+        \draw[thick] (8.0,1.0) -- (8.5,1.0) -- (9.5,0.0);
+        \draw[thick] (8.0,-1.0) -- (8.5,-1.0) -- (9.5,0.0);
+        \draw[thick] (8.0,-2.5) -- (8.5,-2.5) -- (9.5,0.0);
+        %Serial Region
+        \draw[thick] (9.5,0.0) -- (10.5,0.0);
+        \filldraw[fill=red!80!black] (10.5,-0.5) rectangle (13.0,0.5);
+        \draw[thick] (13.0,0.0) -- (14.0,0.0);
+        %Parallel Region 3 threads
+        \filldraw[fill=gray!20!white,dotted] (15.0,-2.5) rectangle (19.0,2.5);
+        \draw[thick] (14.0,0.0) -- (15.0,1.5) -- (15.5,1.5);
+        \draw[thick] (14.0,0.0) -- (15.0,0.0) -- (15.5,0.0);
+        \draw[thick] (14.0,0.0) -- (15.0,-1.5) -- (15.5,-1.5);
+        \filldraw[fill=blue!50!white] (15.5,1.0) rectangle (18.5,2.0);
+        \filldraw[fill=blue!50!white] (15.5,-0.5) rectangle (18.5,0.5);
+        \filldraw[fill=blue!50!white] (15.5,-1.0) rectangle (18.5,-2.0);
+        \draw[thick] (18.5,1.5) -- (19.0,1.5) -- (20.0,0.0);
+        \draw[thick] (18.5,0.0) -- (19.0,0.0) -- (20.0,0.0);
+        \draw[thick] (18.5,-1.5) -- (19.0,-1.5) -- (20.0,0.0);
+        %Serial Region
+        \draw[thick] (20.0,0.0) -- (21.0,0.0);
+        \filldraw[fill=red!80!black] (21.0,-0.5) rectangle (23.5,0.5);
+        % Add Text
+        % Denote Parallel Region
+        \draw (12.0,-4.0) node {Parallel} ;
+        \draw (12.0,-5.0) node {Region} ;
+        \draw[->,thick] (10.0,-4.5) -| (6.5,-3.5);
+        \draw[->,thick] (14.0,-4.5) -| (17.0,-2.5);
+        % Denote Serial Region
+        \draw (11.75,4.5) node {Serial};
+        \draw (11.75,3.5) node {Region};
+        \draw[->,thick] (11.75,3.0) -- (11.75,0.5);
+        \draw[->,thick] (10.0,4.0) -| (1.25,0.5);
+        \draw[->,thick] (13.75,4.0) -| (22.25,0.5);
+        % Denote Fork and Join Locations
+        \filldraw[fill=white] (3.5,0) circle (0.5);
+        \filldraw[fill=white] (9.5,0) circle (0.5);
+        \filldraw[fill=white] (14.0,0) circle (0.5);
+        \filldraw[fill=white] (20.0,0) circle (0.5);
+        \draw[draw=black] (3.5,0) node {F};
+        \draw[draw=black] (9.5,0) node {J};
+        \draw[draw=black] (14.0,0) node {F};
+        \draw[draw=black] (20.0,0) node {J};
+      \end{tikzpicture}
+      \vspace{-0.8cm}
+    \end{center}

@@ -6,6 +6,10 @@ This tutorial provides a brief introduction to parallel programming using OpenMP
     + Feb. 16, 2012 
     + Jun. 10, 2013
     + Jun. 4, 2014
+  * Parallel Programming Workshop at Lehigh on
+    + May. 31, 2017
+    + Jul. 17, 2018
+    + Jul 14, 2021
 
 # Contributer
 Alex Pacheco  

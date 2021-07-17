@@ -1,0 +1,84 @@
+
+%\setbeamersize{text margin left=10pt,text margin right=10pt}
+\usetheme{lehigh}
+
+\usefonttheme{professionalfonts}
+\usefonttheme{serif}
+
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+% add packages to use
+%\usepackage[latin1]{inputenc}
+%\usepackage[english]{babel}
+%\usepackage[normalem]{ulem}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{amsmath,amssymb,amsfonts,subfigure,pifont}
+\usepackage{graphicx}
+\usepackage{multirow,multicol}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{fancyvrb,listings}
+\usepackage{algorithm,algpseudocode}
+%\usepackage{keystroke}
+\usepackage{etex}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{trees,matrix,shapes,arrows}
+\usetikzlibrary{calc}
+
+
+\input{mylistingsenv}
+
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+%\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\newcommand{\smark}{\ding{77}}
+\newcommand*\vardiamond{\textcolor{lubrown}{%
+  \ensuremath{\blacklozenge}}}
+\newcommand*\mybigstar{\textcolor{lubrown!90!yellow}{%
+  \ensuremath{\bigstar}}}
+\newcommand*\up{\textcolor{green!80!black}{%
+  \ensuremath{\blacktriangle}}}
+\newcommand*\down{\textcolor{red}{%
+  \ensuremath{\blacktriangledown}}}
+\newcommand*\const{\textcolor{darkgray}%
+  {\textbf{--}}}
+\newcommand*\enter{\tikz[baseline=-0.5ex] \draw[<-] (0,0) -| (0.5,0.1);}
+\newcommand{\bftt}[1]{\textbf{\texttt{#1}}}
+\newcommand{\bflub}[1]{\textbf{\color{lubrown}#1}}
+\newcommand{\lstfortran}[1]{\lstinline[language={[90]Fortran},basicstyle=\small\ttfamily]|#1|}
+\newcommand{\lstC}[1]{\lstinline[language=C,basicstyle=\small\ttfamily]|#1|}
+\newcommand{\Verblubrown}[1]{\Verb[formatcom=\color{lubrown},fontseries=b,commandchars=\\\{\}]|#1|}
+\newcommand{\Verblue}[1]{\Verb[formatcom=\color{lublue},fontseries=b,commandchars=\\\{\}]!#1!}
+\newcommand{\Verbblue}[2][b]{\Verb[formatcom=\color{lublue},fontshape=#1,commandchars=\\\{\}]|#2|}
+\newcommand{\Verblubrownp}[1]{\Verb[formatcom=\color{lubrown},fontseries=b,commandchars=\\\{\}]!#1!}
+\newcommand{\Verbred}[1]{\Verb[formatcom=\color{red},commandchars=\\\{\}]|#1|}
+\newcommand{\Verbindigo}[1]{\Verb[formatcom=\color{indigo},fontsize=\fontsize{7.5}{8}\selectfont,commandchars=\\\{\}]!#1!}
+
+\newcolumntype{a}{>{\columncolor{lulime}}c}
+\newcolumntype{b}{>{\columncolor{lulime!50}}c}
+\newcolumntype{d}{>{\columncolor{lulime!40}}c}
+\newcolumntype{e}{>{\columncolor{lulime}}l}
+\newcolumntype{f}{>{\columncolor{lulime!50}}l}
+
+                           
+% LOGOS
+\pgfdeclareimage[height=0.55cm]{lucolor-logo}{LehighU_official-logo_Color.png}
+\rplogo{\pgfuseimage{lucolor-logo}}
+\pgfdeclareimage[height=0.55cm]{luwhite-logo}{LehighU_official-logo_White.png}
+\tplogo{\pgfuseimage{luwhite-logo}}
+% footer logo
+%\pgfdeclareimage[width=0.3\paperwidth]{university-logo}{lulogo}
+%\tllogo{\pgfuseimage{university-logo}}
+
+%titlepage logo
+%\titlegraphic{\includegraphics[scale=0.5]{lu}}
+
+\beamertemplateballitem
+
